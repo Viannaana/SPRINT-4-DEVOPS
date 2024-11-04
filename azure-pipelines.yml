@@ -1,0 +1,31 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
+
+- task: AzureSpringCloud@0
+  inputs:
+    azureSubscription: '2TDSS-RM98974-ANA JULIA(3)(6a1dfbdb-a5d7-4265-8e20-f38d3f28fb77)'
+    Action: 'Deploy'
+    AzureSpringCloud: '/subscriptions/6a1dfbdb-a5d7-4265-8e20-f38d3f28fb77/resourceGroups/ResoucesSprint4/providers/Microsoft.AppPlatform/Spring/api-station'
+    AppName: 'station'
+    UseStagingDeployment: false
+    DeploymentName: 'default'
